@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Welcome aboard — GST Invoice Generator</title>
+<style>
+  :root {
+    --indigo: #4F46E5;
+    --indigo-dark: #4338CA;
+    --charcoal: #0F172A;
+    --grey: #64748B;
+    --bg: #F8FAFC;
+    --border: #E2E8F0;
+    --success: #10B981;
+    --success-soft: #D1FAE5;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, system-ui, sans-serif;
+    background: var(--bg); color: var(--charcoal); min-height: 100vh; padding: 24px;
+  }
+  .wrap { max-width: 560px; margin: 40px auto; }
+  .card { background: #fff; border-radius: 16px; padding: 36px;
+          box-shadow: 0 10px 40px -10px rgba(15, 23, 42, .08); }
+  .check {
+    width: 64px; height: 64px; border-radius: 50%; background: var(--success-soft);
+    color: var(--success); display: grid; place-items: center; margin: 0 auto 18px;
+    font-size: 32px;
+  }
+  h1 { font-size: 26px; text-align: center; letter-spacing: -.5px; margin-bottom: 8px; }
+  .sub { color: var(--grey); text-align: center; font-size: 15.5px; margin-bottom: 28px; }
+  .license {
+    background: var(--bg); border: 1.5px dashed var(--border); border-radius: 10px;
+    padding: 14px; text-align: center; margin-bottom: 24px;
+  }
+  .license-key {
+    font-family: "SF Mono", Monaco, monospace; font-size: 16px; font-weight: 700;
+    letter-spacing: 1px; color: var(--indigo); margin-top: 6px; user-select: all;
+  }
+  .copy-btn { background: transparent; border: 0; color: var(--indigo); font-size: 13px; cursor: pointer; margin-top: 6px; font-family: inherit; }
+  .btn {
+    display: block; width: 100%; padding: 14px 24px; border: 0; border-radius: 10px;
+    background: var(--indigo); color: #fff; font-size: 16px; font-weight: 700;
+    cursor: pointer; text-align: center; text-decoration: none; transition: all .15s;
+    margin-bottom: 16px;
+  }
+  .btn:hover { background: var(--indigo-dark); transform: translateY(-1px); }
+  .steps { margin: 24px 0; padding: 18px; background: var(--bg); border-radius: 10px; }
+  .steps h3 { font-size: 15px; margin-bottom: 12px; color: var(--indigo); }
+  .steps ol { padding-left: 20px; line-height: 1.8; font-size: 14.5px; }
+  .steps code { background: #fff; padding: 2px 8px; border-radius: 4px; font-size: 13px; border: 1px solid var(--border); }
+  .small { color: var(--grey); font-size: 13.5px; text-align: center; margin-top: 18px; line-height: 1.7; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="card">
+    <div class="check">✓</div>
+    <h1>Welcome aboard! 🎉</h1>
+    <p class="sub">Your purchase is confirmed. We've emailed your licence and download link to <strong id="customer-email">your inbox</strong>.</p>
+
+    <div class="license" id="license-box" style="display: none;">
+      <div style="font-size: 12px; color: var(--grey); text-transform: uppercase; letter-spacing: .5px;">Your licence key</div>
+      <div class="license-key" id="license-key">—</div>
+      <button class="copy-btn" onclick="copyKey()">📋 Copy</button>
+    </div>
+
+    <a class="btn" id="download-btn" href="#">⬇️ Download the plugin (.zip)</a>
+
+    <div class="steps">
+      <h3>3-step setup</h3>
+      <ol>
+        <li>Unzip the file you just downloaded</li>
+        <li>Move it into <code>~/.claude/skills/</code> (Mac/Linux) or <code>%USERPROFILE%\.claude\skills\</code> (Windows)</li>
+        <li>Restart Claude Code or Cowork, then say: <em>"raise an invoice for [client], [what you sold]"</em></li>
+      </ol>
+    </div>
+
+    <p class="small">
+      Stuck? Reply to the email we just sent — I read every message and reply within 24 hrs.<br>
+      <strong>Bala</strong> · built solo, in Chennai 🇮🇳
+    </p>
+  </div>
+</div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const license = params.get('license');
+  const download = params.get('download');
+  const email = params.get('email');
+  const subId = params.get('subscription_id');
+
+  if (license) {
+    document.getElementById('license-box').style.display = 'block';
+    document.getElementById('license-key').textContent = license;
+  }
+  if (email) document.getElementById('customer-email').textContent = email;
+
+  const btn = document.getElementById('download-btn');
+  if (download) {
+    btn.href = download;
+  } else if (subId) {
+    btn.href = '#';
+    btn.textContent = '✉️ Check your email for the download link';
+    btn.style.cursor = 'default';
+    btn.onclick = (e) => e.preventDefault();
+  }
+
+  function copyKey() {
+    const k = document.getElementById('license-key').textContent;
+    navigator.clipboard.writeText(k);
+    const b = event.target;
+    const orig = b.textContent;
+    b.textContent = '✓ Copied';
+    setTimeout(() => { b.textContent = orig; }, 1500);
+  }
+</script>
+
+</body></html>

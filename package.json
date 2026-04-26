@@ -1,0 +1,33 @@
+{
+  "name": "gst-invoice-payment-server",
+  "version": "1.0.0",
+  "description": "Razorpay payment server for GST Invoice Generator — handles checkout, webhook verification, subscription management, and license delivery.",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test:checkout": "node scripts/test-checkout.js",
+    "test:webhook": "node scripts/test-webhook.js"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "razorpay": "^2.9.4",
+    "dotenv": "^16.4.5",
+    "resend": "^4.0.0",
+    "better-sqlite3": "^11.3.0",
+    "crypto-js": "^4.2.0",
+    "morgan": "^1.10.0",
+    "cors": "^2.8.5",
+    "helmet": "^8.0.0",
+    "express-rate-limit": "^7.4.0"
+  },
+  "devDependencies": {
+    "node-fetch": "^3.3.2"
+  },
+  "author": "Balaganapathi R <r.balaganapathi@gmail.com>",
+  "license": "Commercial"
+}

@@ -1,0 +1,9 @@
+node_modules/
+.env
+.env.local
+.env.production
+data/
+deliverables/
+*.log
+.DS_Store
+*.tmp

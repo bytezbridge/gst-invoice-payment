@@ -1,0 +1,18 @@
+# Nixpacks configuration for Railway / similar Nixpacks-based platforms
+# Forces Node 20 LTS and ensures better-sqlite3 native build deps are present
+
+[phases.setup]
+nixPkgs = ["nodejs_20", "python3", "gcc", "gnumake", "pkg-config"]
+
+[phases.install]
+cmds = ["npm ci --omit=dev"]
+
+[phases.build]
+cmds = ["echo 'No build step needed (no TypeScript / no bundler)'"]
+
+[start]
+cmd = "node server.js"
+
+[variables]
+NODE_VERSION = "20"
+NPM_CONFIG_PRODUCTION = "true"

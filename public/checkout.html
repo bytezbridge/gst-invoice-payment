@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Checkout — GST Invoice Generator</title>
+<meta name="description" content="Complete your purchase securely with Razorpay. UPI, cards, net banking accepted.">
+<style>
+  :root {
+    --indigo: #4F46E5;
+    --indigo-dark: #4338CA;
+    --charcoal: #0F172A;
+    --grey: #64748B;
+    --bg: #F8FAFC;
+    --border: #E2E8F0;
+    --success: #10B981;
+    --error: #EF4444;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "SF Pro Display", "Inter", system-ui, sans-serif;
+    background: var(--bg); color: var(--charcoal); line-height: 1.55;
+    min-height: 100vh; padding: 20px;
+  }
+  .wrap { max-width: 480px; margin: 40px auto; }
+  .logo { color: var(--indigo); font-weight: 800; text-align: center; margin-bottom: 24px; font-size: 18px; }
+  .card {
+    background: #fff; border-radius: 16px; padding: 32px;
+    box-shadow: 0 10px 40px -10px rgba(15, 23, 42, .08);
+  }
+  h1 { font-size: 24px; letter-spacing: -.5px; margin-bottom: 4px; }
+  .sub { color: var(--grey); font-size: 14.5px; margin-bottom: 24px; }
+  label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--charcoal); }
+  input, select {
+    width: 100%; padding: 12px 14px; border: 1.5px solid var(--border);
+    border-radius: 10px; font-size: 15px; font-family: inherit;
+    margin-bottom: 14px; transition: border-color .15s;
+  }
+  input:focus, select:focus { outline: none; border-color: var(--indigo); }
+  .row { display: flex; gap: 12px; }
+  .row > * { flex: 1; }
+  .price-card {
+    background: var(--bg); border: 1.5px solid var(--border); border-radius: 12px;
+    padding: 16px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;
+  }
+  .price-card .name { font-weight: 600; }
+  .price-card .desc { color: var(--grey); font-size: 13px; }
+  .price-card .amount { font-size: 22px; font-weight: 800; color: var(--indigo); }
+  .price-card .amount small { font-size: 13px; font-weight: 500; color: var(--grey); }
+  .btn {
+    display: block; width: 100%; padding: 14px 24px; border: 0; border-radius: 10px;
+    background: var(--indigo); color: #fff; font-size: 16px; font-weight: 700;
+    cursor: pointer; transition: all .15s;
+  }
+  .btn:hover:not(:disabled) { background: var(--indigo-dark); transform: translateY(-1px); }
+  .btn:disabled { opacity: .6; cursor: not-allowed; }
+  .checkbox-row { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--grey); margin: 16px 0; }
+  .checkbox-row input { width: auto; margin: 0; flex-shrink: 0; }
+  .checkbox-row a { color: var(--indigo); }
+  .err { background: #FEF2F2; color: #991B1B; padding: 12px; border-radius: 8px; font-size: 14px; margin-bottom: 14px; display: none; }
+  .err.show { display: block; }
+  .secure { text-align: center; color: var(--grey); font-size: 13px; margin-top: 16px; }
+  .secure svg { vertical-align: -3px; margin-right: 4px; }
+  .toggle {
+    display: flex; gap: 8px; margin-bottom: 20px; padding: 4px;
+    background: var(--bg); border-radius: 10px;
+  }
+  .toggle button {
+    flex: 1; padding: 8px; border: 0; background: transparent; font-weight: 600;
+    border-radius: 8px; cursor: pointer; color: var(--grey); font-family: inherit; font-size: 14px;
+  }
+  .toggle button.active { background: #fff; color: var(--charcoal); box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="logo">⚡ GST Invoice Generator</div>
+  <div class="card">
+    <h1>Complete your order</h1>
+    <p class="sub">Pay securely with UPI · Cards · Net Banking · Wallets</p>
+
+    <div class="toggle" id="tier-toggle">
+      <button data-tier="starter">Starter ₹799/mo</button>
+      <button data-tier="pro">Pro ₹2,499/mo</button>
+      <button data-tier="lifetime" class="active">Lifetime ₹9,999</button>
+    </div>
+
+    <div class="price-card">
+      <div>
+        <div class="name" id="tier-name">Lifetime</div>
+        <div class="desc" id="tier-desc">One-time · Forever access · All Pro features</div>
+      </div>
+      <div class="amount" id="tier-amount">₹9,999</div>
+    </div>
+
+    <div class="err" id="err"></div>
+
+    <form id="checkout-form" novalidate>
+      <label>Full name</label>
+      <input type="text" id="name" required placeholder="Balaganapathi R" autocomplete="name">
+
+      <label>Email (where we'll send the licence)</label>
+      <input type="email" id="email" required placeholder="you@example.com" autocomplete="email">
+
+      <div class="row">
+        <div>
+          <label>Phone</label>
+          <input type="tel" id="phone" placeholder="+91 90000 00000" autocomplete="tel">
+        </div>
+        <div>
+          <label>GSTIN <span style="font-weight: 400; color: var(--grey);">(optional)</span></label>
+          <input type="text" id="gstin" placeholder="29AAACA1234B1ZK" maxlength="15" style="text-transform: uppercase;">
+        </div>
+      </div>
+
+      <div class="checkbox-row">
+        <input type="checkbox" id="terms" required>
+        <label for="terms" style="margin: 0; font-weight: 400;">
+          I agree to the <a href="/terms" target="_blank">Terms</a>,
+          <a href="/privacy" target="_blank">Privacy Policy</a>, and
+          <a href="/refund" target="_blank">Refund Policy</a>
+        </label>
+      </div>
+
+      <button class="btn" id="pay-btn" type="submit">Pay securely with Razorpay →</button>
+
+      <div class="secure">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1l3 6 6 .9-4.5 4.4 1 6.7-5.5-3-5.5 3 1-6.7L3 7.9 9 7z"/></svg>
+        256-bit SSL · PCI-DSS compliant · 30-day money back
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+  const API_BASE = window.location.origin; // assumes server.js + this page on same origin behind reverse proxy
+  // If hosting separately, set this to: 'https://api.your-landing-page.com'
+
+  const TIERS_DATA = {
+    starter:    { name: 'Starter (Monthly)',    desc: 'Recurring · 100 invoices/mo · No watermark', amount: '₹799',    type: 'subscription' },
+    pro:        { name: 'Pro (Monthly)',        desc: 'Recurring · Unlimited · IRP integration',   amount: '₹2,499',  type: 'subscription' },
+    lifetime:   { name: 'Lifetime',             desc: 'One-time · Forever access · All Pro features', amount: '₹9,999', type: 'one_time' },
+  };
+
+  let selectedTier = 'lifetime';
+
+  const $ = id => document.getElementById(id);
+  const errEl = $('err');
+  const showErr = msg => { errEl.textContent = msg; errEl.classList.add('show'); };
+  const clearErr = () => { errEl.textContent = ''; errEl.classList.remove('show'); };
+
+  function updateTierUI() {
+    const t = TIERS_DATA[selectedTier];
+    $('tier-name').textContent = t.name;
+    $('tier-desc').textContent = t.desc;
+    $('tier-amount').textContent = t.amount;
+    document.querySelectorAll('#tier-toggle button').forEach(b => {
+      b.classList.toggle('active', b.dataset.tier === selectedTier);
+    });
+  }
+
+  document.querySelectorAll('#tier-toggle button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      selectedTier = btn.dataset.tier;
+      updateTierUI();
+    });
+  });
+
+  // Pre-fill from URL: /checkout.html?tier=pro
+  const urlTier = new URLSearchParams(window.location.search).get('tier');
+  if (urlTier && TIERS_DATA[urlTier]) { selectedTier = urlTier; updateTierUI(); }
+
+  $('checkout-form').addEventListener('submit', async (e) => {
+    e.preventDefault(); clearErr();
+    const btn = $('pay-btn');
+    btn.disabled = true; btn.textContent = 'Preparing payment...';
+
+    const name = $('name').value.trim();
+    const email = $('email').value.trim();
+    const phone = $('phone').value.trim();
+    const gstin = $('gstin').value.trim().toUpperCase();
+    const tier = selectedTier;
+    const t = TIERS_DATA[tier];
+
+    if (!$('terms').checked) {
+      showErr('Please accept the terms to continue.');
+      btn.disabled = false; btn.textContent = 'Pay securely with Razorpay →';
+      return;
+    }
+
+    try {
+      const endpoint = t.type === 'subscription'
+        ? '/api/checkout/create-subscription'
+        : '/api/checkout/create-order';
+
+      const res = await fetch(API_BASE + endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tier, name, email, phone, gstin }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Could not create order');
+
+      const opts = {
+        key: data.key_id,
+        name: 'GST Invoice Generator',
+        description: data.tier_name,
+        prefill: { name, email, contact: phone },
+        notes: { gstin },
+        theme: { color: '#4F46E5' },
+        modal: {
+          ondismiss: () => {
+            btn.disabled = false; btn.textContent = 'Pay securely with Razorpay →';
+          },
+        },
+      };
+
+      if (t.type === 'subscription') {
+        opts.subscription_id = data.subscription_id;
+        opts.handler = async (response) => {
+          // Subscription payment captured — webhook will activate licence and email
+          window.location = `/success.html?subscription_id=${response.razorpay_subscription_id}`;
+        };
+      } else {
+        opts.order_id = data.order_id;
+        opts.amount = data.amount;
+        opts.currency = data.currency;
+        opts.handler = async (response) => {
+          // Verify on server, get licence + download URL
+          btn.textContent = 'Activating licence...';
+          const verifyRes = await fetch(API_BASE + '/api/checkout/verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            }),
+          });
+          const v = await verifyRes.json();
+          if (!verifyRes.ok) {
+            showErr(v.error || 'Verification failed. Email us with order id.');
+            btn.disabled = false; btn.textContent = 'Pay securely with Razorpay →';
+            return;
+          }
+          const params = new URLSearchParams({
+            license: v.license_key,
+            download: v.download_url,
+            email,
+          });
+          window.location = `/success.html?${params.toString()}`;
+        };
+      }
+
+      const rzp = new Razorpay(opts);
+      rzp.on('payment.failed', (resp) => {
+        showErr(`Payment failed: ${resp.error?.description || resp.error?.reason || 'unknown error'}`);
+        btn.disabled = false; btn.textContent = 'Pay securely with Razorpay →';
+      });
+      rzp.open();
+    } catch (e) {
+      console.error(e);
+      showErr(e.message || 'Something went wrong — please try again.');
+      btn.disabled = false; btn.textContent = 'Pay securely with Razorpay →';
+    }
+  });
+</script>
+</body>
+</html>
