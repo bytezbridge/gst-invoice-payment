@@ -5,7 +5,7 @@
 nixPkgs = ["nodejs_20", "python3", "gcc", "gnumake", "pkg-config"]
 
 [phases.install]
-cmds = ["npm ci --omit=dev"]
+cmds = ["npm install --omit=dev"]
 
 [phases.build]
 cmds = ["echo 'No build step needed (no TypeScript / no bundler)'"]
