@@ -95,6 +95,9 @@ app.use(express.json({ limit: '50kb' }));
 
 app.use(morgan('combined'));
 
+// Serve static files (checkout.html, success.html) from /public
+app.use(express.static(path.join(__dirname, 'public')));
+
 // CORS
 const corsOrigins = (process.env.CORS_ORIGINS || '').split(',').filter(Boolean);
 app.use(cors({
