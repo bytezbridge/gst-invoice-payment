@@ -97,7 +97,6 @@ app.use(morgan('combined'));
 
 // Serve static files (checkout.html, success.html) from /public
 app.use(express.static(path.join(__dirname, 'public')));
-app.get('/', (req, res) => res.redirect('/checkout.html'));
 
 // CORS
 const corsOrigins = (process.env.CORS_ORIGINS || '').split(',').filter(Boolean);
