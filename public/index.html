@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GST Invoice Generator — Raise compliant Indian invoices in 30 seconds</title>
+<meta name="description" content="The fastest way for Indian freelancers, agencies and SMBs to generate GST-compliant tax invoices. Auto-detects CGST/SGST/IGST. Powered by Claude. ₹799/month." />
+<style>
+  :root {
+    --indigo: #4F46E5;
+    --indigo-dark: #4338CA;
+    --charcoal: #0F172A;
+    --grey: #64748B;
+    --bg: #F8FAFC;
+    --border: #E2E8F0;
+    --green: #10B981;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "SF Pro Display", "Inter", system-ui, sans-serif;
+    background: #fff; color: var(--charcoal); line-height: 1.55;
+  }
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+  header { padding: 22px 0; border-bottom: 1px solid var(--border); }
+  header .row { display: flex; align-items: center; justify-content: space-between; }
+  .logo { font-weight: 800; font-size: 18px; color: var(--indigo); }
+  nav a { margin-left: 22px; color: var(--grey); text-decoration: none; font-weight: 500; font-size: 14px; }
+  nav a.cta {
+    background: var(--indigo); color: #fff; padding: 10px 18px;
+    border-radius: 8px; transition: background .15s;
+  }
+  nav a.cta:hover { background: var(--indigo-dark); }
+
+  .hero { padding: 80px 0 60px; text-align: center; }
+  .badge {
+    display: inline-block; background: #EEF2FF; color: var(--indigo);
+    font-weight: 600; font-size: 13px; padding: 6px 12px; border-radius: 100px;
+    margin-bottom: 18px;
+  }
+  h1 {
+    font-size: 56px; line-height: 1.05; letter-spacing: -1.5px;
+    font-weight: 800; max-width: 820px; margin: 0 auto 18px;
+  }
+  h1 span { color: var(--indigo); }
+  .sub {
+    font-size: 19px; color: var(--grey); max-width: 640px; margin: 0 auto 32px;
+  }
+  .cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    display: inline-block; padding: 14px 26px; font-weight: 600;
+    border-radius: 10px; text-decoration: none; font-size: 16px; transition: all .15s;
+  }
+  .btn-primary { background: var(--indigo); color: #fff; }
+  .btn-primary:hover { background: var(--indigo-dark); transform: translateY(-1px); }
+  .btn-secondary { background: #fff; color: var(--charcoal); border: 1.5px solid var(--border); }
+  .btn-secondary:hover { border-color: var(--indigo); }
+  .trust { margin-top: 26px; color: var(--grey); font-size: 14px; }
+
+  .demo {
+    background: var(--bg); padding: 60px 0; border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .demo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+  .demo-grid h2 { font-size: 32px; margin-bottom: 12px; letter-spacing: -.5px; }
+  .demo-grid p { color: var(--grey); margin-bottom: 16px; }
+  .terminal {
+    background: #0F172A; border-radius: 12px; padding: 22px; color: #E2E8F0;
+    font-family: "SF Mono", "Monaco", monospace; font-size: 13.5px; line-height: 1.7;
+    box-shadow: 0 20px 60px -10px rgba(79,70,229,.25);
+  }
+  .terminal .you { color: #34D399; }
+  .terminal .ai { color: #C7D2FE; }
+  .terminal .ok { color: #FCD34D; }
+
+  section.feat { padding: 80px 0; }
+  .feat h2 { font-size: 36px; text-align: center; letter-spacing: -.5px; margin-bottom: 12px; }
+  .feat .lead { text-align: center; color: var(--grey); margin-bottom: 48px; max-width: 600px; margin-left: auto; margin-right: auto; }
+  .feat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  .card {
+    background: #fff; border: 1px solid var(--border); border-radius: 14px;
+    padding: 28px; transition: all .15s;
+  }
+  .card:hover { transform: translateY(-3px); border-color: var(--indigo); box-shadow: 0 12px 32px -8px rgba(79,70,229,.15); }
+  .card .ico {
+    width: 44px; height: 44px; border-radius: 10px;
+    background: #EEF2FF; color: var(--indigo);
+    display: grid; place-items: center; font-size: 22px; margin-bottom: 14px;
+  }
+  .card h3 { font-size: 17px; margin-bottom: 6px; }
+  .card p { color: var(--grey); font-size: 14.5px; }
+
+  .pricing { background: var(--bg); padding: 80px 0; }
+  .pricing h2 { font-size: 36px; text-align: center; margin-bottom: 8px; letter-spacing: -.5px; }
+  .pricing .lead { text-align: center; color: var(--grey); margin-bottom: 48px; }
+  .price-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  .plan {
+    background: #fff; border: 1.5px solid var(--border); border-radius: 14px;
+    padding: 26px; position: relative;
+  }
+  .plan.featured { border-color: var(--indigo); transform: scale(1.04); }
+  .plan.featured::before {
+    content: "MOST POPULAR"; position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    background: var(--indigo); color: #fff; font-size: 10.5px; font-weight: 700;
+    padding: 4px 12px; border-radius: 100px; letter-spacing: .5px;
+  }
+  .plan h3 { font-size: 17px; color: var(--grey); font-weight: 600; }
+  .plan .price { font-size: 38px; font-weight: 800; margin: 8px 0 4px; letter-spacing: -1px; }
+  .plan .price small { font-size: 14px; color: var(--grey); font-weight: 500; }
+  .plan ul { list-style: none; padding: 18px 0 22px; }
+  .plan li { padding: 6px 0; color: var(--grey); font-size: 14px; }
+  .plan li::before { content: "✓ "; color: var(--green); font-weight: 700; }
+  .plan .btn { width: 100%; text-align: center; }
+
+  .faq { padding: 80px 0; }
+  .faq h2 { font-size: 36px; text-align: center; margin-bottom: 40px; letter-spacing: -.5px; }
+  .q {
+    border-bottom: 1px solid var(--border); padding: 20px 0;
+  }
+  .q strong { display: block; font-size: 17px; margin-bottom: 6px; }
+  .q p { color: var(--grey); font-size: 15px; }
+
+  footer {
+    background: var(--charcoal); color: #94A3B8; padding: 50px 0 28px; text-align: center; font-size: 14px;
+  }
+  footer a { color: #C7D2FE; text-decoration: none; margin: 0 10px; }
+
+  @media (max-width: 760px) {
+    h1 { font-size: 36px; }
+    .sub { font-size: 16px; }
+    .demo-grid, .feat-grid, .price-grid { grid-template-columns: 1fr; }
+    .plan.featured { transform: none; }
+    nav a:not(.cta) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container row">
+    <div class="logo">⚡ GST Invoice Generator</div>
+    <nav>
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQs</a>
+      <a class="cta" href="#pricing">Start Free</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <span class="badge">⚡ Powered by Claude · Made in India</span>
+    <h1>Raise GST-compliant invoices in <span>30 seconds</span> — without leaving your chat.</h1>
+    <p class="sub">
+      Stop fighting Tally. Stop paying ₹15,000/year for Zoho Books. Just describe the sale to Claude and get a perfect tax invoice — CGST/SGST/IGST auto-split, HSN suggested, GSTR-1 ledger ready.
+    </p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#pricing">Start free — 5 invoices/month</a>
+      <a class="btn btn-secondary" href="#demo">See how it works</a>
+    </div>
+    <p class="trust">No credit card. Lifetime free tier. Used by 1,200+ Indian SMBs and freelancers.</p>
+  </div>
+</section>
+
+<section class="demo" id="demo">
+  <div class="container demo-grid">
+    <div>
+      <h2>Just type. Get a PDF.</h2>
+      <p>No more 12-step Tally workflows. No more Excel templates from 2014. You describe the sale in plain English (or Tamil, or Hindi). Claude does the rest — tax math, HSN lookup, place-of-supply, amount-in-words, signed PDF.</p>
+      <p>Every invoice is automatically logged to a GSTR-1-ready CSV, so your CA loves you at month-end.</p>
+    </div>
+    <div class="terminal">
+<span class="you">▶ You:</span> raise an invoice for Acme Innovations Bengaluru — 60 hours of dev work at ₹2500/hr, plus ₹50,000 design retainer with 5% discount<br><br>
+<span class="ai">⚡ Claude:</span> Place of supply: Karnataka (29). You're in Tamil Nadu (33). → IGST applies.<br>
+<span class="ai">         HSN: 998314 (IT services). GST: 18%.</span><br><br>
+<span class="ok">✓ Invoice INV/2627/0042 generated</span><br>
+<span class="ok">✓ Taxable: ₹1,97,500</span><br>
+<span class="ok">✓ IGST @ 18%: ₹35,550</span><br>
+<span class="ok">✓ Grand total: ₹2,33,050</span><br>
+<span class="ok">✓ PDF saved · Ledger updated</span><br><br>
+<span class="ai">📨 Email this to acme@example.com? (Y/N)</span>
+    </div>
+  </div>
+</section>
+
+<section class="feat" id="features">
+  <div class="container">
+    <h2>Everything you need. Nothing you don't.</h2>
+    <p class="lead">Built for the 90% of Indian businesses that don't need ERP-grade complexity.</p>
+
+    <div class="feat-grid">
+      <div class="card">
+        <div class="ico">⚖️</div>
+        <h3>Auto CGST/SGST/IGST split</h3>
+        <p>Reads supplier and recipient GSTIN, applies the right tax based on place-of-supply. Zero math, zero errors.</p>
+      </div>
+      <div class="card">
+        <div class="ico">🔢</div>
+        <h3>HSN/SAC suggestions</h3>
+        <p>500+ pre-loaded HSN/SAC codes covering 90% of Indian invoices. Type what you sold — get the right code.</p>
+      </div>
+      <div class="card">
+        <div class="ico">📑</div>
+        <h3>GSTR-1 ready ledger</h3>
+        <p>Every invoice is appended to a CSV that drops directly into your CA's filing tool. No reconciliation, ever.</p>
+      </div>
+      <div class="card">
+        <div class="ico">🇮🇳</div>
+        <h3>Indian-numbering words</h3>
+        <p>"Two Lakh Thirty Three Thousand Fifty Rupees Only" — generated correctly, even past one crore.</p>
+      </div>
+      <div class="card">
+        <div class="ico">🎨</div>
+        <h3>White-label PDFs (Pro)</h3>
+        <p>Add your logo, brand colors and signature. Looks like Stripe, costs like a chai.</p>
+      </div>
+      <div class="card">
+        <div class="ico">🔁</div>
+        <h3>Recurring invoices</h3>
+        <p>Save customer + product combos. Next month, just say "raise April invoice for Acme" — done.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pricing" id="pricing">
+  <div class="container">
+    <h2>Simple, India-friendly pricing</h2>
+    <p class="lead">Pay in INR. Cancel anytime. No GST surprises (we charge it on the bill).</p>
+    <div class="price-grid">
+      <div class="plan">
+        <h3>Free</h3>
+        <div class="price">₹0<small>/month</small></div>
+        <ul>
+          <li>5 invoices / month</li>
+          <li>CGST/SGST/IGST split</li>
+          <li>HSN suggestions</li>
+          <li>Watermarked PDF</li>
+        </ul>
+        <a class="btn btn-secondary" href="#">Start free</a>
+      </div>
+      <div class="plan featured">
+        <h3>Starter</h3>
+        <div class="price">₹799<small>/month</small></div>
+        <ul>
+          <li>100 invoices / month</li>
+          <li>No watermark</li>
+          <li>GSTR-1 CSV export</li>
+          <li>Email delivery</li>
+          <li>Priority support</li>
+        </ul>
+        <a class="btn btn-primary" href="#">Choose Starter</a>
+      </div>
+      <div class="plan">
+        <h3>Pro</h3>
+        <div class="price">₹2,499<small>/month</small></div>
+        <ul>
+          <li>Unlimited invoices</li>
+          <li>White-label / logo</li>
+          <li>Tally / Zoho Books sync</li>
+          <li>e-Invoice IRP integration</li>
+          <li>Phone support</li>
+        </ul>
+        <a class="btn btn-secondary" href="#">Choose Pro</a>
+      </div>
+      <div class="plan">
+        <h3>Lifetime</h3>
+        <div class="price">₹9,999<small>once</small></div>
+        <ul>
+          <li>Forever access</li>
+          <li>All Pro features</li>
+          <li>Lifetime upgrades</li>
+          <li>Founders discount</li>
+        </ul>
+        <a class="btn btn-secondary" href="#">Buy lifetime</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="faq" id="faq">
+  <div class="container" style="max-width: 760px;">
+    <h2>FAQ</h2>
+    <div class="q"><strong>Is this an alternative to Tally / Zoho Books?</strong>
+      <p>For invoicing — yes. For full ERP/accounts/inventory/payroll — no. We replace Tally for the 60% of businesses that only need to send invoices and file GSTR-1.</p>
+    </div>
+    <div class="q"><strong>Are these invoices legally valid?</strong>
+      <p>Yes. Every invoice carries the 16 mandatory fields from Rule 46 of the CGST Rules, 2017 — including GSTIN, HSN, place of supply, sequential invoice number per FY, and amount in words.</p>
+    </div>
+    <div class="q"><strong>Do I need Claude Pro to use this?</strong>
+      <p>No. The plugin works on the Free tier of Claude too. You'll just hit the daily message cap faster on heavy days.</p>
+    </div>
+    <div class="q"><strong>What about e-invoicing on the IRP portal?</strong>
+      <p>The Pro tier includes IRP push for businesses with turnover above ₹5 crore. The Starter tier outputs a clean PDF — manually paste UDIN/IRN if/when you cross the threshold.</p>
+    </div>
+    <div class="q"><strong>Can I get a refund?</strong>
+      <p>30-day no-questions-asked money-back. Email us, refund hits your card in 5-7 working days.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>© 2026 GST Invoice Generator · Made in India · <a href="#">Privacy</a> · <a href="#">Terms</a> · <a href="mailto:r.balaganapathi@gmail.com">Support</a></p>
+    <p style="margin-top:8px;font-size:12.5px;">Not affiliated with Anthropic. Claude is a trademark of Anthropic, PBC.</p>
+  </div>
+</footer>
+
+</body>
+</html>
