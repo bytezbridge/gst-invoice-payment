@@ -1,21 +1,21 @@
-/* landing-extras.js — adds YouTube embed + interactive Claude-style demo to landing page
+/* landing-extras.js — adds self-hosted demo video + interactive Claude-style demo to landing page
    Loaded after the rest of index.html, this script:
-   1. Replaces the video-placeholder div with a YouTube iframe (https://youtu.be/man6kqinu-4)
+   1. Replaces the video-placeholder div with an HTML5 <video> tag pointing at /demo.mp4
    2. Inserts a new "Try it. Right here. Right now." interactive demo section before #painpoints
 */
 (function () {
-  // ---------- 1. YouTube iframe (replaces .video-placeholder) ----------
+  // ---------- 1. Self-hosted MP4 video (replaces .video-placeholder) ----------
   var ph = document.querySelector('.video-placeholder');
   if (ph) {
-    var iframe = document.createElement('iframe');
-    iframe.src = 'https://www.youtube.com/embed/man6kqinu-4?rel=0&modestbranding=1&playsinline=1';
-    iframe.title = 'GST Invoice Generator — 1 minute demo';
-    iframe.loading = 'lazy';
-    iframe.setAttribute('frameborder', '0');
-    iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
-    iframe.setAttribute('allowfullscreen', '');
-    iframe.style.cssText = 'width:100%;height:100%;border:0;border-radius:16px';
-    ph.replaceWith(iframe);
+    var video = document.createElement('video');
+    video.src = '/demo.mp4';
+    video.controls = true;
+    video.playsInline = true;
+    video.preload = 'metadata';
+    video.poster = '';
+    video.title = 'GST Invoice Generator — 1 minute demo';
+    video.style.cssText = 'width:100%;height:100%;border:0;border-radius:16px;background:#000;object-fit:cover';
+    ph.replaceWith(video);
   }
 
   // ---------- 2. Inject CSS for the live demo ----------
