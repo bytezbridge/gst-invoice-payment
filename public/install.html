@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Install Guide — GST Invoice Generator | ByteZBridge</title>
+<meta name="description" content="Step-by-step guide: install the GST Invoice Generator plugin in Claude, generate your first invoice in 30 seconds." />
+<meta property="og:title" content="Install GST Invoice Generator — 5-minute setup" />
+<meta property="og:description" content="From zip download to your first invoice in 5 minutes. Step-by-step guide." />
+<style>
+  :root {
+    --indigo: #4F46E5;
+    --indigo-dark: #4338CA;
+    --indigo-soft: #EEF2FF;
+    --charcoal: #0F172A;
+    --slate: #475569;
+    --slate-light: #94A3B8;
+    --bg: #F8FAFC;
+    --border: #E2E8F0;
+    --green: #10B981;
+    --green-soft: #D1FAE5;
+    --gold: #F59E0B;
+    --gold-soft: #FEF3C7;
+    --red-soft: #FEE2E2;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "SF Pro Display", "Inter", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--charcoal);
+    line-height: 1.6;
+    font-size: 16px;
+  }
+  a { color: var(--indigo); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Top nav */
+  .nav {
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    padding: 16px 0;
+  }
+  .container { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+  .nav-logo { font-size: 18px; font-weight: 800; color: var(--indigo); display: flex; align-items: center; gap: 6px; }
+  .nav-back { color: var(--slate); font-size: 14px; }
+
+  /* Hero */
+  .hero {
+    text-align: center;
+    padding: 60px 0 40px;
+  }
+  .hero .badge {
+    display: inline-block;
+    background: var(--green-soft);
+    color: var(--green);
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-size: 42px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1.15;
+    margin-bottom: 16px;
+    color: var(--charcoal);
+  }
+  .hero p {
+    font-size: 18px;
+    color: var(--slate);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* Step cards */
+  .steps {
+    padding: 0 0 80px;
+  }
+  .step {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px 32px 28px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+    position: relative;
+  }
+  .step-num {
+    position: absolute;
+    top: -16px;
+    left: 24px;
+    background: linear-gradient(135deg, var(--indigo), var(--indigo-dark));
+    color: #fff;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 18px;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+  }
+  .step h2 {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--charcoal);
+    margin-bottom: 8px;
+    margin-top: 12px;
+  }
+  .step .duration {
+    display: inline-block;
+    background: var(--indigo-soft);
+    color: var(--indigo-dark);
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .step p {
+    color: var(--slate);
+    margin-bottom: 14px;
+  }
+  .step ul, .step ol {
+    margin: 12px 0 16px 24px;
+    color: var(--slate);
+  }
+  .step li { margin-bottom: 6px; }
+
+  /* Inline code */
+  code {
+    background: var(--indigo-soft);
+    color: var(--indigo-dark);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: "SF Mono", Menlo, monospace;
+    font-size: 14px;
+    font-weight: 600;
+    word-break: break-all;
+  }
+  pre {
+    background: var(--charcoal);
+    color: #E2E8F0;
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin: 14px 0;
+    overflow-x: auto;
+    font-family: "SF Mono", Menlo, monospace;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+    font-size: inherit;
+    font-weight: normal;
+  }
+
+  /* Tip / warning callouts */
+  .callout {
+    border-left: 4px solid var(--gold);
+    background: var(--gold-soft);
+    padding: 14px 18px;
+    border-radius: 0 8px 8px 0;
+    margin: 14px 0;
+    font-size: 15px;
+  }
+  .callout.green { border-color: var(--green); background: var(--green-soft); color: #065F46; }
+  .callout strong { font-weight: 700; }
+
+  /* Demo video */
+  .video-block {
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 20px 0;
+    aspect-ratio: 16 / 9;
+  }
+  .video-block video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Sample prompts */
+  .prompts {
+    background: var(--indigo-soft);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 16px 0;
+  }
+  .prompts h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--indigo-dark);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .prompts .prompt {
+    background: #fff;
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-family: "SF Mono", Menlo, monospace;
+    font-size: 14px;
+    color: var(--charcoal);
+    border: 1px solid #C7D2FE;
+  }
+
+  /* CTA at bottom */
+  .cta-bottom {
+    background: linear-gradient(135deg, var(--indigo), var(--indigo-dark));
+    color: #fff;
+    padding: 48px 32px;
+    border-radius: 16px;
+    text-align: center;
+    margin-top: 32px;
+  }
+  .cta-bottom h3 {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+  .cta-bottom p {
+    font-size: 16px;
+    color: #C7D2FE;
+    margin-bottom: 24px;
+  }
+  .cta-bottom .btn {
+    display: inline-block;
+    background: #fff;
+    color: var(--indigo);
+    padding: 14px 32px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 16px;
+  }
+  .cta-bottom .btn:hover { text-decoration: none; background: var(--indigo-soft); }
+
+  /* FAQ at bottom */
+  .help {
+    text-align: center;
+    padding: 32px 0 80px;
+    color: var(--slate);
+  }
+  .help a { font-weight: 600; }
+
+  /* Footer */
+  .footer {
+    background: #fff;
+    border-top: 1px solid var(--border);
+    padding: 24px 0;
+    text-align: center;
+    font-size: 14px;
+    color: var(--slate-light);
+  }
+  .footer a { color: var(--slate); }
+  .footer .brand { color: var(--indigo); font-weight: 700; }
+
+  /* Mobile */
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 30px; }
+    .hero p { font-size: 16px; }
+    .step { padding: 24px 20px 20px; }
+    .step h2 { font-size: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">⚡ GST Invoice Generator</a>
+    <a href="/" class="nav-back">← Back to home</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <div class="badge">📦 You bought it. Here's how to use it.</div>
+    <h1>5-minute setup. First invoice in 30 seconds.</h1>
+    <p>If you got the licence email, you're already 60% done. The rest is just unzipping, pointing Claude at the folder, and asking for an invoice.</p>
+  </div>
+</header>
+
+<main class="steps">
+  <div class="container">
+
+    <!-- STEP 1 -->
+    <section class="step">
+      <div class="step-num">1</div>
+      <h2>Download the plugin zip <span class="duration">~30 sec</span></h2>
+      <p>Open the licence email we sent right after your purchase (sender: <code>hello@gstinvoice.app</code>, subject: "Your GST Invoice Generator licence").</p>
+      <p>Click the green <strong>"Download plugin"</strong> button inside. It downloads a file like <code>gst-invoice-generator-v1.1.0.zip</code> (~25 KB).</p>
+      <div class="callout">
+        <strong>Can't find the email?</strong> Check spam first. Still missing? Email <a href="mailto:hello@gstinvoice.app">hello@gstinvoice.app</a> with your purchase order ID — we'll resend within 1 working hour.
+      </div>
+    </section>
+
+    <!-- STEP 2 -->
+    <section class="step">
+      <div class="step-num">2</div>
+      <h2>Unzip the file <span class="duration">~10 sec</span></h2>
+      <p><strong>On Mac:</strong> Double-click the zip in Finder. macOS auto-extracts it next to the zip → you'll see a folder named <code>gst-invoice-generator-plugin/</code>.</p>
+      <p><strong>On Windows:</strong> Right-click the zip → <em>Extract All</em> → click Extract. Same folder appears.</p>
+      <div class="callout green">
+        <strong>Tip:</strong> Move that folder to a permanent spot like <code>~/Documents/gst-invoice-generator-plugin/</code> so you don't lose it after Downloads cleanup.
+      </div>
+    </section>
+
+    <!-- STEP 3 -->
+    <section class="step">
+      <div class="step-num">3</div>
+      <h2>Install the plugin in Claude <span class="duration">~30 sec</span></h2>
+      <p>Open <a href="https://claude.ai" target="_blank">claude.ai</a> (or Claude Desktop). Start a new conversation.</p>
+      <p>Type this exactly, replacing the path with where you unzipped:</p>
+      <pre><code>/install plugin from /Users/yourname/Documents/gst-invoice-generator-plugin/</code></pre>
+      <p>Hit enter. Claude installs the plugin and confirms with a message like:</p>
+      <pre><code>✓ Installed gst-invoice-generator v1.1.0
+   Triggered by: "raise an invoice", "make a tax invoice", "show my dashboard"</code></pre>
+      <div class="callout">
+        <strong>Don't see the /install command?</strong> Make sure you're on Claude Pro / Team / Max plan — the free tier doesn't support custom plugins. Upgrade at <a href="https://claude.ai/upgrade" target="_blank">claude.ai/upgrade</a>.
+      </div>
+    </section>
+
+    <!-- STEP 4 -->
+    <section class="step">
+      <div class="step-num">4</div>
+      <h2>Generate your first invoice <span class="duration">~30 sec</span></h2>
+      <p>In the same conversation, just describe the sale in plain English:</p>
+      <div class="prompts">
+        <h4>Try one of these:</h4>
+        <div class="prompt">raise an invoice for Reliance Industries, ₹25,000, web design, Mumbai</div>
+        <div class="prompt">create a GST invoice for Tata Consultancy, 50K rupees, software consulting, Bangalore</div>
+        <div class="prompt">make a tax invoice for Acme Corp — ₹3 lakhs, app development, Maharashtra</div>
+      </div>
+      <p>Claude will:</p>
+      <ul>
+        <li>Auto-detect <strong>CGST+SGST vs IGST</strong> based on state</li>
+        <li>Suggest the correct <strong>HSN/SAC code</strong></li>
+        <li>Convert the amount to Indian-numbering words ("Twenty-Nine Thousand Five Hundred Rupees Only")</li>
+        <li>Generate a professional <strong>PDF invoice</strong></li>
+        <li>Auto-update your <strong>dashboard.html</strong> + <strong>invoice_ledger.csv</strong></li>
+      </ul>
+    </section>
+
+    <!-- STEP 5 -->
+    <section class="step">
+      <div class="step-num">5</div>
+      <h2>Open your dashboard <span class="duration">~10 sec</span></h2>
+      <p>Once you've generated 1+ invoices, type:</p>
+      <pre><code>show my invoice dashboard</code></pre>
+      <p>Claude opens <code>dashboard.html</code> in your browser — beautiful overview of:</p>
+      <ul>
+        <li>📊 Invoices issued this month</li>
+        <li>💰 Total revenue + GST collected</li>
+        <li>📅 GSTR-1 filing due date (auto-calculated)</li>
+        <li>👥 Recent clients</li>
+        <li>📋 Live GSTR-1 ledger preview</li>
+      </ul>
+      <p>The dashboard refreshes automatically every time you generate a new invoice.</p>
+    </section>
+
+    <!-- STEP 6 -->
+    <section class="step">
+      <div class="step-num">6</div>
+      <h2>Export your GSTR-1 ledger <span class="duration">end of month</span></h2>
+      <p>When monthly filing is due (11th of next month), just say:</p>
+      <pre><code>export my GSTR-1 ledger</code></pre>
+      <p>Claude points you to <code>invoice_ledger.csv</code> in your plugin folder. Open it in Excel — every column required for GSTR-1 filing is there: invoice number, date, recipient GSTIN, place of supply, taxable value, CGST/SGST/IGST split, grand total.</p>
+      <div class="callout">
+        <strong>Coming in v1.3 (this week):</strong> One-click export to the exact JSON format that <code>gst.gov.in</code> portal expects. Until then, the CSV gives you everything in the right columns — your CA can reformat in 5 min if needed.
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <div class="cta-bottom">
+      <h3>That's it. You're done.</h3>
+      <p>Generate as many invoices as you want — no monthly cap, no per-invoice charge.</p>
+      <a href="/" class="btn">Back to home</a>
+    </div>
+
+    <!-- HELP -->
+    <div class="help">
+      <p>Stuck on a step? Email <a href="mailto:hello@gstinvoice.app">hello@gstinvoice.app</a> — we reply within 1 working hour.</p>
+      <p style="margin-top: 8px; font-size: 13px;">Or open the chat widget at the bottom right of any page on <a href="/">gstinvoice.app</a>.</p>
+    </div>
+
+  </div>
+</main>
+
+<footer class="footer">
+  <p>Built with care by <a href="https://bytezbridge.com" target="_blank" class="brand">ByteZBridge</a> · Chennai, India</p>
+  <p style="margin-top: 6px;">
+    <a href="/terms.html">Terms</a> ·
+    <a href="/privacy.html">Privacy</a> ·
+    <a href="/refund.html">Refund</a>
+  </p>
+</footer>
+
+</body>
+</html>
