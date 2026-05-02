@@ -277,6 +277,44 @@ app.post('/api/admin/send-cold-batch', express.json({ limit: '500kb' }), async (
   res.json({ total: results.length, sent, failed: results.length - sent, results });
 });
 
+// AI Sales Chatbot — proxies to Claude API (Haiku 4.5) for free-text questions
+app.post('/api/chat', express.json({ limit: '50kb' }), async (req, res) => {
+  try {
+    const apiKey = process.env.ANTHROPIC_API_KEY;
+    if (!apiKey) return res.status(500).json({ error: 'ANTHROPIC_API_KEY not set' });
+    const userMessage = (req.body && req.body.message) || '';
+    const history = (req.body && req.body.history) || [];
+    if (!userMessage || userMessage.length > 1000) return res.status(400).json({ error: 'invalid message' });
+    const systemPrompt = "You are ByteZBridge's AI sales assistant for gstinvoice.app — a Claude plugin that generates GST-compliant Indian tax invoices in 30 seconds for ₹9,999 lifetime (one-time, no subscriptions). Your job: qualify the visitor, answer their question concisely (under 80 words), and route them toward the checkout. Key facts you can cite: (1) Auto CGST/SGST/IGST split from GSTIN state code. (2) 500+ pre-loaded HSN/SAC codes. (3) Indian-numbering words (Lakh/Crore). (4) Auto-updated dashboard + GSTR-1 ready CSV. (5) Local-first — data never leaves user's device. (6) Works inside Claude Pro/Max/Team accounts. (7) 30-day money-back guarantee. (8) Pricing: ₹9,999 lifetime for first 100 customers, then ₹12,999. (9) Saves ₹15K+/yr vs Tally. NEVER invent features we don't have. If asked about features not in this list (e.g. multi-currency, recurring invoices, e-invoice IRP), say 'shipping in v1.2 next week — buy now and get it free.' If they want to buy: send them to /checkout.html. If they want demo: send them to /#video. If they want install help: /install.html. If they want a call with the founder: https://calendly.com/balaganapathi/30min. Always end with a clear next-step CTA. Tone: friendly, direct, no corporate-speak, light Indian English warmth.";
+    const messages = [];
+    history.slice(-6).forEach(function (h) {
+      if (h && h.role && h.text) messages.push({ role: h.role === 'bot' ? 'assistant' : 'user', content: h.text });
+    });
+    messages.push({ role: 'user', content: userMessage });
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5',
+        max_tokens: 250,
+        system: systemPrompt,
+        messages: messages,
+      }),
+    });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) return res.status(r.status).json({ error: (j && j.error && j.error.message) || 'upstream error' });
+    const answer = (j.content && j.content[0] && j.content[0].text) || '';
+    res.json({ answer: answer, model: j.model || 'claude-haiku-4-5' });
+  } catch (e) {
+    res.status(500).json({ error: String(e).slice(0, 200) });
+  }
+});
+
+
 
 // ---------- 1. Create one-time payment order (Lifetime, Commercial, White-Label) ----------
 app.post('/api/checkout/create-order', checkoutLimiter, async (req, res) => {
