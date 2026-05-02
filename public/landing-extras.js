@@ -4,6 +4,37 @@
    2. Inserts a new "Try it. Right here. Right now." interactive demo section before #painpoints
 */
 (function () {
+  // ---------- 0. Inject "Setup guide" link in nav + footer ----------
+  try {
+    var navLinks = document.querySelectorAll('header nav a, .nav a, header a');
+    var pricingLink = Array.from(navLinks).find(function (a) { return /pricing/i.test(a.textContent || ''); });
+    if (pricingLink && !document.querySelector('a[href="/install.html"]')) {
+      var setupLink = document.createElement('a');
+      setupLink.href = '/install.html';
+      setupLink.textContent = 'Setup';
+      // Mirror sibling style
+      setupLink.className = pricingLink.className;
+      setupLink.style.cssText = window.getComputedStyle(pricingLink).cssText;
+      pricingLink.parentNode.insertBefore(setupLink, pricingLink.nextSibling);
+    }
+    // Add to footer too
+    var footer = document.querySelector('footer');
+    if (footer && !footer.innerHTML.includes('install.html')) {
+      var fLink = document.createElement('a');
+      fLink.href = '/install.html';
+      fLink.textContent = 'Setup guide';
+      fLink.style.cssText = 'color:inherit;margin:0 8px;text-decoration:none';
+      var divider = document.createElement('span');
+      divider.textContent = ' · ';
+      // Insert near other footer links
+      var firstFooterLink = footer.querySelector('a');
+      if (firstFooterLink && firstFooterLink.parentNode) {
+        firstFooterLink.parentNode.insertBefore(fLink, firstFooterLink);
+        firstFooterLink.parentNode.insertBefore(divider, firstFooterLink);
+      }
+    }
+  } catch (e) { /* ignore — defensive */ }
+
   // ---------- 1. Self-hosted MP4 video (replaces .video-placeholder) ----------
   var ph = document.querySelector('.video-placeholder');
   if (ph) {
