@@ -7,7 +7,7 @@
    - Surfaces relevant pain → solution per role
    - Handles 25+ objections (price, Tally, refund, Claude Pro, security, etc.)
    - Quick-reply buttons for fast paths
-   - Free-text fallback with keyword routing
+   - Free-text fallback with keyword routing + Claude Haiku AI fallback
    - Email capture for non-buyers (logged to /api/lead — graceful if endpoint missing)
    - Direct "Buy now" CTA after meaningful exchange
 */
@@ -126,6 +126,8 @@
       ".sb-trigger.hidden { display: none; }" +
       ".sb-trigger .pulse { position: absolute; inset: -6px; border-radius: 50%; background: rgba(79,70,229,0.3); animation: sb-pulse 2s infinite; pointer-events: none; }" +
       "@keyframes sb-pulse { 0% { transform: scale(0.95); opacity: 1; } 100% { transform: scale(1.4); opacity: 0; } }" +
+      "@keyframes sb-dot { 0%,80%,100% { opacity: 0.3; transform: scale(0.8); } 40% { opacity: 1; transform: scale(1); } }" +
+      ".sb-typing { color: #94A3B8; padding: 14px 16px !important; }" +
       ".sb-window { position: fixed; bottom: 100px; right: 24px; z-index: 9999; width: 380px; max-width: calc(100vw - 32px); height: 580px; max-height: calc(100vh - 140px); background: #fff; border-radius: 16px; box-shadow: 0 20px 60px rgba(15,23,42,0.2); display: none; flex-direction: column; overflow: hidden; border: 1px solid #E2E8F0; }" +
       ".sb-window.open { display: flex; }" +
       ".sb-header { background: linear-gradient(135deg, #4F46E5, #4338CA); color: #fff; padding: 16px 20px; display: flex; align-items: center; gap: 12px; }" +
@@ -209,6 +211,65 @@
     msg.textContent = text;
     body.appendChild(msg);
     body.scrollTop = body.scrollHeight;
+  }
+
+  // Typing indicator (animated dots) while Claude API is thinking
+  function appendTyping(body) {
+    var msg = document.createElement('div');
+    msg.className = 'sb-msg bot sb-typing';
+    msg.innerHTML = '<span style="display:inline-block;animation:sb-dot 1.2s infinite">●</span><span style="display:inline-block;animation:sb-dot 1.2s infinite 0.2s;margin:0 4px">●</span><span style="display:inline-block;animation:sb-dot 1.2s infinite 0.4s">●</span>';
+    body.appendChild(msg);
+    body.scrollTop = body.scrollHeight;
+    return msg;
+  }
+
+  // Free-text fallback: call our Railway /api/chat endpoint (Claude Haiku 4.5)
+  function callClaudeApi(userText, body) {
+    var typingEl = appendTyping(body);
+    fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: userText,
+        history: state.history.slice(-6) // last 3 turns context
+      })
+    })
+      .then(function (r) { return r.json().catch(function () { return {}; }); })
+      .then(function (j) {
+        if (typingEl && typingEl.parentNode) typingEl.parentNode.removeChild(typingEl);
+        var answer = (j && j.answer) ? String(j.answer).trim() : '';
+        if (!answer) {
+          appendBotMsg("Hmm, let me get someone better qualified. Email <a href='mailto:" + SUPPORT_EMAIL + "'>" + SUPPORT_EMAIL + "</a> — Bala replies within 1 working hour.", [
+            { label: '📺 Watch demo', value: 'demo' },
+            { label: '💰 Price', value: 'price' },
+            { label: '📞 Book a call', value: 'calendly' }
+          ], body);
+          return;
+        }
+        // Render AI answer (light HTML escape, then re-allow basic markdown-ish)
+        var safe = answer
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+          .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+          .replace(/\n/g, '<br>');
+        // Append CTA link at end if AI mentioned price/buy
+        if (/(₹9,?999|lifetime|buy|purchase|checkout)/i.test(answer)) {
+          safe += "<br><br><a href='" + CHECKOUT_URL + "' style='display:inline-block;background:#4F46E5;color:#fff;padding:8px 14px;border-radius:8px;font-weight:700;font-size:13px;text-decoration:none;margin-top:4px'>Buy now ₹9,999 →</a>";
+        }
+        appendBotMsg(safe, [
+          { label: '🚀 Buy now', value: 'buy' },
+          { label: '📺 Demo', value: 'demo' },
+          { label: '🤔 More questions', value: 'help' }
+        ], body);
+        state.history.push({ role: 'bot', text: answer });
+      })
+      .catch(function () {
+        if (typingEl && typingEl.parentNode) typingEl.parentNode.removeChild(typingEl);
+        appendBotMsg("My brain hiccupped 😅 Email <a href='mailto:" + SUPPORT_EMAIL + "'>" + SUPPORT_EMAIL + "</a> — Bala replies within 1 working hour. Or pick a topic below:", [
+          { label: '📺 Demo', value: 'demo' },
+          { label: '💰 Price', value: 'price' },
+          { label: '🆚 vs Tally', value: 'tally' }
+        ], body);
+      });
   }
 
   function appendCtaCard(body) {
@@ -367,15 +428,8 @@
       return;
     }
 
-    // Stage 10: ultimate fallback
-    setTimeout(function () {
-      appendBotMsg("Hmm, let me get someone better qualified. Email <a href='mailto:" + SUPPORT_EMAIL + "'>" + SUPPORT_EMAIL + "</a> with your question — Bala replies within 1 working hour. Or pick something below:", [
-        { label: '📺 Watch demo', value: 'demo' },
-        { label: '💰 Price', value: 'price' },
-        { label: '🆚 vs Tally', value: 'tally' },
-        { label: '📞 Book a call', value: 'calendly' }
-      ], body);
-    }, 400);
+    // Stage 10: AI fallback — call Claude Haiku via /api/chat for free-text questions
+    callClaudeApi(text, body);
   }
 
   function roleQuickReplies(role) {
