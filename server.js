@@ -248,6 +248,36 @@ app.get('/api/pricing', (req, res) => {
   res.json({ tiers });
 });
 
+// Cold-email batch sender (admin-only, single-use). Remove after launch batch.
+app.post('/api/admin/send-cold-batch', express.json({ limit: '500kb' }), async (req, res) => {
+  const token = req.get('X-Admin-Token');
+  if (token !== 'BALA_COLD_2026_05_01_KX9F2P7Q') return res.status(401).json({ error: 'unauthorized' });
+  const payloads = req.body && req.body.payloads;
+  if (!Array.isArray(payloads)) return res.status(400).json({ error: 'expected payloads array' });
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) return res.status(500).json({ error: 'RESEND_API_KEY not set' });
+  const results = [];
+  for (const p of payloads) {
+    const clean = Object.assign({}, p);
+    delete clean._meta;
+    try {
+      const r = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + apiKey, 'Content-Type': 'application/json' },
+        body: JSON.stringify(clean)
+      });
+      const j = await r.json().catch(() => ({}));
+      results.push({ to: p.to[0], ok: r.ok, status: r.status, id: j.id || '', error: j.message || j.name || '' });
+    } catch (e) {
+      results.push({ to: p.to[0], ok: false, status: 0, error: String(e).slice(0, 200) });
+    }
+    await new Promise((rs) => setTimeout(rs, 600));
+  }
+  const sent = results.filter((x) => x.ok).length;
+  res.json({ total: results.length, sent, failed: results.length - sent, results });
+});
+
+
 // ---------- 1. Create one-time payment order (Lifetime, Commercial, White-Label) ----------
 app.post('/api/checkout/create-order', checkoutLimiter, async (req, res) => {
   try {
