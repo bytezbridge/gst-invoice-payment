@@ -70,6 +70,17 @@
     border-radius: 8px; cursor: pointer; color: var(--grey); font-family: inherit; font-size: 14px;
   }
   .toggle button.active { background: #fff; color: var(--charcoal); box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+  .discount-banner {
+    background: linear-gradient(135deg, #4F46E5 0%, #4338CA 100%);
+    color: #fff;
+    padding: 14px 16px;
+    border-radius: 12px;
+    margin-bottom: 18px;
+    font-size: 14px; font-weight: 600;
+    text-align: center;
+    box-shadow: 0 6px 16px -6px rgba(79, 70, 229, .55);
+  }
+  .price-card .strike { color: var(--grey); text-decoration: line-through; font-size: 14px; font-weight: 500; margin-right: 6px; }
 </style>
 </head>
 <body>
@@ -80,7 +91,13 @@
     <h1>Complete your order</h1>
     <p class="sub">Pay securely with UPI · Cards · Net Banking · Wallets</p>
 
+    <div class="discount-banner" id="discount-banner" style="display:none;">
+      🎉 Your 24-hour upgrade discount is active — save ₹5,000 vs regular price.
+    </div>
+
     <div class="toggle" id="tier-toggle">
+      <button data-tier="starter">Starter ₹799/mo</button>
+      <button data-tier="pro">Pro ₹2,499/mo</button>
       <button data-tier="lifetime" class="active">Lifetime ₹9,999</button>
     </div>
 
@@ -166,9 +183,42 @@
     });
   });
 
-  // Pre-fill from URL: /checkout.html?tier=pro
-  const urlTier = new URLSearchParams(window.location.search).get('tier');
+  // Pre-fill from URL: /checkout.html?tier=pro&price=4999&email=...&license=...
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlTier = urlParams.get('tier');
   if (urlTier && TIERS_DATA[urlTier]) { selectedTier = urlTier; updateTierUI(); }
+
+  // Discount support: ?price=4999 forces the lifetime tier and applies the 24-hour
+  // discount price + amount. Anything else is ignored (regular pricing wins).
+  const DISCOUNT_PRICE_INR = 4999;
+  const REGULAR_PRICE_INR  = 9999;
+  const urlPrice = parseInt(urlParams.get('price') || '', 10);
+  const urlEmail = urlParams.get('email') || '';
+  const urlLicense = urlParams.get('license') || '';
+  let discountActive = false;
+
+  if (urlPrice === DISCOUNT_PRICE_INR) {
+    discountActive = true;
+    selectedTier = 'lifetime';
+    // Override displayed price for lifetime
+    TIERS_DATA.lifetime.amount = '₹4,999';
+    TIERS_DATA.lifetime.desc   = 'One-time · Forever access · 24-hr discount applied';
+    updateTierUI();
+    // Show banner
+    const banner = $('discount-banner');
+    if (banner) banner.style.display = 'block';
+    // Mark the lifetime toggle button label too
+    const lifeBtn = document.querySelector('#tier-toggle button[data-tier="lifetime"]');
+    if (lifeBtn) lifeBtn.innerHTML = 'Lifetime <span class="strike">₹9,999</span>₹4,999';
+    // Show strike-through in price card
+    $('tier-amount').innerHTML = '<span class="strike">₹9,999</span>₹4,999';
+  }
+
+  // Pre-fill form fields when passed in
+  if (urlEmail) {
+    const emailEl = $('email');
+    if (emailEl) emailEl.value = urlEmail;
+  }
 
   $('checkout-form').addEventListener('submit', async (e) => {
     e.preventDefault(); clearErr();
@@ -196,7 +246,7 @@
       const res = await fetch(API_BASE + endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tier, name, email, phone, gstin }),
+        body: JSON.stringify({ tier, name, email, phone, gstin, license_key: urlLicense || undefined }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Could not create order');
@@ -235,6 +285,7 @@
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
+              license_key: urlLicense || undefined,
             }),
           });
           const v = await verifyRes.json();
