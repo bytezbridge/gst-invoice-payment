@@ -1,0 +1,36 @@
+{
+  "name": "bytezbridge",
+  "owner": {
+    "name": "ByteZBridge",
+    "email": "hello@gstinvoice.app",
+    "url": "https://gstinvoice.app"
+  },
+  "metadata": {
+    "description": "ByteZBridge plugins for Indian SMBs, freelancers, CAs, and SaaS founders. Built in Chennai. Ships GST-compliant tax tooling, invoicing, and accounting workflows directly into Claude.",
+    "version": "1.0.0",
+    "homepage": "https://gstinvoice.app",
+    "tags": ["india", "gst", "invoicing", "accounting", "smb", "freelance", "ca"]
+  },
+  "plugins": [
+    {
+      "name": "gst-invoice-generator",
+      "source": "./plugins/gst-invoice-generator",
+      "description": "Generate GST-compliant Indian tax invoices in Claude. Auto-detects CGST+SGST vs IGST from GSTIN state codes, suggests HSN/SAC codes, converts amounts to Indian-numbering words (Lakh/Crore), and links to gstinvoice.app for full PDF generation, dashboard, and GSTR-1 ledger.",
+      "version": "1.2.0",
+      "author": {
+        "name": "ByteZBridge",
+        "email": "hello@gstinvoice.app",
+        "url": "https://gstinvoice.app"
+      },
+      "homepage": "https://gstinvoice.app",
+      "license": "Lite version free; full automation Lifetime ₹9,999 — see https://gstinvoice.app/checkout.html",
+      "category": "productivity",
+      "tags": ["india", "gst", "invoice", "tax", "cgst", "sgst", "igst", "hsn", "gstr-1", "freelance", "ca", "compliance"],
+      "screenshots": [
+        "https://gstinvoice.app/screenshots/invoice-pdf.png",
+        "https://gstinvoice.app/screenshots/dashboard.png",
+        "https://gstinvoice.app/screenshots/claude-conversation.png"
+      ]
+    }
+  ]
+}
