@@ -1006,6 +1006,46 @@ app.get('/api/admin/sales', (req, res) => {
   res.json(rows);
 });
 
+// ---------- 7. Admin: license signups dashboard data ----------
+// Auth via ?token= query param OR x-admin-token header so it works from a static HTML page too.
+app.get('/api/admin/licenses', (req, res) => {
+  const provided = req.headers['x-admin-token'] || req.query.token;
+  if (!process.env.ADMIN_TOKEN || provided !== process.env.ADMIN_TOKEN) {
+    return res.status(403).json({ error: 'unauthorized' });
+  }
+  const totals = db.prepare(`
+    SELECT
+      COUNT(*)                                             AS total,
+      SUM(CASE WHEN status='free'     THEN 1 ELSE 0 END)   AS free,
+      SUM(CASE WHEN status='lifetime' THEN 1 ELSE 0 END)   AS lifetime,
+      SUM(CASE WHEN status='banned'   THEN 1 ELSE 0 END)   AS banned,
+      SUM(invoice_count)                                   AS total_invoices_raised
+      FROM licenses
+  `).get();
+  const recent = db.prepare(`
+    SELECT email, status, invoice_count, max_invoices,
+           datetime(created_at/1000, 'unixepoch')    AS created,
+           datetime(last_used_at/1000, 'unixepoch')  AS last_used,
+           datetime(period_start/1000, 'unixepoch')  AS period_start,
+           datetime(quota_first_hit_at/1000, 'unixepoch') AS quota_hit_at,
+           datetime(upgraded_at/1000, 'unixepoch')   AS upgraded_at,
+           ip_address
+      FROM licenses
+     ORDER BY id DESC
+     LIMIT 500
+  `).all();
+  // Conversion rate (lifetime / free signups)
+  const conversion_rate = totals.total > 0
+    ? ((totals.lifetime / totals.total) * 100).toFixed(1) + '%'
+    : '0%';
+  res.json({
+    totals,
+    conversion_rate,
+    fetched_at: new Date().toISOString(),
+    recent,
+  });
+});
+
 // ---------- start ----------
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
