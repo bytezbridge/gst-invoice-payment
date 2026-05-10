@@ -129,6 +129,21 @@ app.use(cors({
   },
 }));
 
+// Serve static files from public/ (landing page, checkout, free-trial, blogs, install-guide.pdf, legal docs, etc.)
+// Must be registered BEFORE API routes so files like /checkout.html, /free-trial.html resolve as files first.
+app.use(express.static(path.join(__dirname, 'public'), {
+  index: 'index.html',
+  extensions: ['html'],
+  maxAge: '1h',
+}));
+
+// Root redirect: / → /index.html (served by static above) — fall back to /checkout.html if no landing page.
+app.get('/', (req, res, next) => {
+  const indexPath = path.join(__dirname, 'public', 'index.html');
+  if (fs.existsSync(indexPath)) return next();  // let static serve index.html
+  return res.redirect('/checkout.html');
+});
+
 // Rate limit on checkout endpoints to prevent abuse
 const checkoutLimiter = rateLimit({
   windowMs: 60 * 1000,    // 1 min
