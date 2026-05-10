@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Licenses · ByteZBridge admin</title>
+<style>
+  :root { --indigo:#4F46E5; --charcoal:#0F172A; --grey:#64748B; --bg:#F8FAFC; --border:#E2E8F0; --green:#10B981; --amber:#F59E0B; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font:14px/1.5 -apple-system,"SF Pro Display",system-ui,sans-serif; background:var(--bg); color:var(--charcoal); padding:24px; }
+  .wrap { max-width:1200px; margin:0 auto; }
+  h1 { font-size:22px; margin-bottom:4px; }
+  .sub { color:var(--grey); margin-bottom:24px; font-size:13px; }
+  .stats { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:24px; }
+  .stat { background:#fff; border-radius:12px; padding:18px; border:1px solid var(--border); }
+  .stat .label { color:var(--grey); font-size:12px; text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px; }
+  .stat .num { font-size:28px; font-weight:800; color:var(--charcoal); }
+  .stat .num.indigo { color:var(--indigo); }
+  .stat .num.green { color:var(--green); }
+  .stat .num.amber { color:var(--amber); }
+  .card { background:#fff; border-radius:12px; padding:0; border:1px solid var(--border); overflow:hidden; }
+  .card-header { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+  .card-header h2 { font-size:16px; }
+  .card-header .actions { display:flex; gap:8px; align-items:center; }
+  .btn { padding:6px 12px; border:1px solid var(--border); background:#fff; border-radius:6px; cursor:pointer; font-size:13px; font-family:inherit; }
+  .btn.primary { background:var(--indigo); color:#fff; border-color:var(--indigo); }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th, td { padding:12px 16px; text-align:left; border-bottom:1px solid var(--border); }
+  th { background:#FAFBFC; font-weight:600; color:var(--grey); font-size:11px; text-transform:uppercase; letter-spacing:.5px; }
+  tr:last-child td { border-bottom:0; }
+  tr:hover td { background:#FAFBFC; }
+  .pill { display:inline-block; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.5px; }
+  .pill.free { background:#EFF6FF; color:#1E40AF; }
+  .pill.lifetime { background:#ECFDF5; color:#065F46; }
+  .pill.banned { background:#FEF2F2; color:#991B1B; }
+  .quota-bar { width:80px; height:6px; background:#E2E8F0; border-radius:3px; overflow:hidden; display:inline-block; vertical-align:middle; margin-right:6px; }
+  .quota-bar .fill { height:100%; background:var(--indigo); }
+  .quota-bar .fill.full { background:var(--amber); }
+  .empty { padding:60px 20px; text-align:center; color:var(--grey); }
+  input[type=password] { padding:10px 14px; border:1px solid var(--border); border-radius:8px; font:14px inherit; width:280px; }
+  .login-card { background:#fff; max-width:420px; margin:80px auto; padding:32px; border-radius:12px; border:1px solid var(--border); }
+  .login-card h1 { margin-bottom:8px; }
+  .login-card p { color:var(--grey); margin-bottom:20px; font-size:13px; }
+  .err { background:#FEF2F2; color:#991B1B; padding:10px 14px; border-radius:8px; margin-top:12px; font-size:13px; }
+  small.muted { color:var(--grey); }
+  .csv-link { color:var(--indigo); text-decoration:none; font-weight:500; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div id="login" class="login-card" style="display:none">
+  <h1>🔒 Admin access</h1>
+  <p>Enter the ADMIN_TOKEN from your Railway env vars.</p>
+  <form id="loginForm">
+    <input id="tok" type="password" placeholder="ADMIN_TOKEN" autofocus required>
+    <button class="btn primary" type="submit" style="margin-left:8px">Unlock</button>
+  </form>
+  <div id="loginErr" class="err" style="display:none"></div>
+</div>
+
+<div id="dash" style="display:none">
+  <h1>📊 ByteZBridge license signups</h1>
+  <div class="sub">Last refreshed: <span id="ts">–</span> · <a href="#" id="refresh" class="csv-link">Refresh</a> · <a href="#" id="csv" class="csv-link">Export CSV</a> · <a href="#" id="logout" class="csv-link">Lock</a></div>
+
+  <div class="stats">
+    <div class="stat"><div class="label">Total signups</div><div id="s-total" class="num indigo">–</div></div>
+    <div class="stat"><div class="label">Free tier</div><div id="s-free" class="num">–</div></div>
+    <div class="stat"><div class="label">Lifetime (paid)</div><div id="s-lifetime" class="num green">–</div></div>
+    <div class="stat"><div class="label">Conversion rate</div><div id="s-conv" class="num amber">–</div></div>
+    <div class="stat"><div class="label">Total invoices raised</div><div id="s-inv" class="num">–</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2>Recent signups (most recent first, max 500)</h2>
+      <div class="actions"><small class="muted" id="row-count">–</small></div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Email</th><th>Status</th><th>Quota used</th><th>Signed up</th><th>Last invoice</th><th>Quota hit?</th><th>Upgraded?</th>
+        </tr>
+      </thead>
+      <tbody id="rows"><tr><td colspan="7" class="empty">Loading…</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+let TOKEN = sessionStorage.getItem('admin_tok') || '';
+
+function show(view) { $('login').style.display = view==='login' ? 'block' : 'none'; $('dash').style.display = view==='dash' ? 'block' : 'none'; }
+
+async function load() {
+  show('dash');
+  try {
+    const res = await fetch('/api/admin/licenses?token=' + encodeURIComponent(TOKEN));
+    if (res.status === 403) { sessionStorage.removeItem('admin_tok'); TOKEN=''; show('login'); $('loginErr').style.display='block'; $('loginErr').textContent='Wrong token. Try again.'; return; }
+    const data = await res.json();
+    render(data);
+  } catch (e) { $('rows').innerHTML = '<tr><td colspan="7" class="empty">Error: ' + e.message + '</td></tr>'; }
+}
+
+function render(d) {
+  $('ts').textContent = new Date(d.fetched_at).toLocaleString();
+  $('s-total').textContent = d.totals.total || 0;
+  $('s-free').textContent = d.totals.free || 0;
+  $('s-lifetime').textContent = d.totals.lifetime || 0;
+  $('s-conv').textContent = d.conversion_rate;
+  $('s-inv').textContent = d.totals.total_invoices_raised || 0;
+  $('row-count').textContent = (d.recent.length || 0) + ' shown';
+
+  if (!d.recent.length) {
+    $('rows').innerHTML = '<tr><td colspan="7" class="empty">No signups yet — wait for your LinkedIn post traffic 🚀</td></tr>';
+    return;
+  }
+  $('rows').innerHTML = d.recent.map(r => {
+    const used = r.invoice_count || 0;
+    const max = r.max_invoices || 5;
+    const pct = Math.min(100, (used/max)*100);
+    const fillClass = used >= max ? 'fill full' : 'fill';
+    const statusPill = `<span class="pill ${r.status}">${r.status}</span>`;
+    return `<tr>
+      <td><strong>${esc(r.email)}</strong></td>
+      <td>${statusPill}</td>
+      <td><span class="quota-bar"><span class="${fillClass}" style="width:${pct}%"></span></span>${used}/${max}</td>
+      <td>${r.created || '–'}</td>
+      <td>${r.last_used || '–'}</td>
+      <td>${r.quota_hit_at || '–'}</td>
+      <td>${r.upgraded_at ? '✅ ' + r.upgraded_at : '–'}</td>
+    </tr>`;
+  }).join('');
+
+  $('csv').onclick = (e) => { e.preventDefault(); downloadCSV(d.recent); };
+}
+
+function downloadCSV(rows) {
+  const headers = ['email','status','invoice_count','max_invoices','created','last_used','quota_hit_at','upgraded_at','ip_address'];
+  const csv = [headers.join(',')].concat(rows.map(r => headers.map(h => `"${(r[h]||'').toString().replace(/"/g,'""')}"`).join(','))).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'bytezbridge-licenses-' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+}
+
+function esc(s) { return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+$('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  TOKEN = $('tok').value.trim();
+  if (!TOKEN) return;
+  sessionStorage.setItem('admin_tok', TOKEN);
+  $('loginErr').style.display = 'none';
+  await load();
+});
+$('refresh').onclick = (e) => { e.preventDefault(); load(); };
+$('logout').onclick = (e) => { e.preventDefault(); sessionStorage.removeItem('admin_tok'); TOKEN=''; show('login'); };
+
+if (TOKEN) load(); else show('login');
+</script>
+</body>
+</html>
