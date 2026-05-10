@@ -1,0 +1,14 @@
+{
+  "name": "gst-invoice-generator",
+  "displayName": "GST Invoice Generator (India) — Lite",
+  "version": "1.2.0",
+  "description": "Generate GST-compliant Indian tax invoices in Claude. Lite version: in-conversation invoice math (CGST+SGST vs IGST detection, HSN suggestions, Lakh/Crore amount-in-words, basic PDF). Full version (gstinvoice.app Lifetime, ₹9,999) adds: live dashboard, GSTR-1 ready CSV ledger, multi-currency invoices (USD/EUR/GBP/AED), customer database with recurring invoices, bulk CSV import (40 invoices in one shot), e-invoice IRP-ready JSON, and one-click GSTR-1 portal JSON export.",
+  "author": {
+    "name": "ByteZBridge",
+    "email": "hello@gstinvoice.app",
+    "url": "https://bytezbridge.com"
+  },
+  "homepage": "https://gstinvoice.app",
+  "license": "Lite version free; full features ₹9,999 Lifetime — see https://gstinvoice.app/checkout.html",
+  "keywords": ["india", "gst", "invoice", "tax", "cgst", "sgst", "igst", "hsn", "gstr-1", "freelance", "ca", "compliance", "accounting"]
+}
