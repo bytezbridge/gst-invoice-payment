@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Input Tax Credit (ITC) Rules under GST — 2026 Guide | gstinvoice.app</title>
+<meta name="description" content="ITC eligibility, blocked credits, time limits and reconciliation rules under GST 2026. Worked examples, GSTR-2B matching tips and the 7 mistakes that lose ITC.">
+<link rel="canonical" href="https://gstinvoice.app/blog/input-tax-credit-rules-2026/">
+<meta property="og:title" content="Input Tax Credit (ITC) Rules under GST — 2026 Guide">
+<meta property="og:description" content="A practical 2026 guide to ITC eligibility, blocked credits, reconciliation with GSTR-2B and the rules that decide whether your credit survives an audit.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://gstinvoice.app/blog/input-tax-credit-rules-2026/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Input Tax Credit (ITC) Rules under GST — 2026 Guide",
+  "description": "A practical 2026 guide to ITC eligibility, blocked credits, reconciliation with GSTR-2B and the rules that decide whether your credit survives an audit.",
+  "image": "https://gstinvoice.app/og/input-tax-credit-rules-2026.png",
+  "author": {"@type": "Organization", "name": "gstinvoice.app"},
+  "publisher": {
+    "@type": "Organization",
+    "name": "gstinvoice.app",
+    "logo": {"@type": "ImageObject", "url": "https://gstinvoice.app/logo.png"}
+  },
+  "datePublished": "2026-05-10",
+  "dateModified": "2026-05-10",
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://gstinvoice.app/blog/input-tax-credit-rules-2026/"}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type":"Question","name":"What is input tax credit (ITC) under GST?","acceptedAnswer":{"@type":"Answer","text":"ITC is the credit a registered taxpayer can claim for GST paid on inward supplies of goods or services used in the course of business, set off against output tax liability."}},
+    {"@type":"Question","name":"What are the four conditions to claim ITC?","acceptedAnswer":{"@type":"Answer","text":"You must have a tax invoice, have received the goods or services, the tax must have actually been paid to the government by the supplier, and you must have filed the relevant return (GSTR-3B). All four conditions in section 16(2) must be met."}},
+    {"@type":"Question","name":"What is the time limit to claim ITC for FY 2025-26?","acceptedAnswer":{"@type":"Answer","text":"For invoices issued during FY 2025-26, you must claim ITC by 30 November 2026 or the date of filing the annual return for FY 2025-26, whichever is earlier."}},
+    {"@type":"Question","name":"What is GSTR-2B and how does it relate to ITC?","acceptedAnswer":{"@type":"Answer","text":"GSTR-2B is the auto-drafted ITC statement generated for each registered person on the 14th of every month. From 2022 onwards, ITC can be claimed only if the supplier has reported the invoice in GSTR-1 and it appears in your GSTR-2B."}},
+    {"@type":"Question","name":"What are blocked credits under section 17(5)?","acceptedAnswer":{"@type":"Answer","text":"Section 17(5) blocks ITC on motor vehicles for personal use, food and beverages, club memberships, health insurance, works-contract for immovable property, goods lost or destroyed, and certain other categories listed exhaustively in the section."}},
+    {"@type":"Question","name":"Can I claim ITC on capital goods?","acceptedAnswer":{"@type":"Answer","text":"Yes, ITC on capital goods is fully claimable in the month of purchase, provided you do not also claim depreciation on the GST component under the Income Tax Act. You must choose one or the other."}},
+    {"@type":"Question","name":"What happens if I claim wrong or excess ITC?","acceptedAnswer":{"@type":"Answer","text":"You must reverse the ITC with interest at 24 percent per annum from the date of wrong availment. Persistent wrong availment can trigger penalty under section 74 of up to 100 percent of the tax involved."}}
+  ]
+}
+</script>
+<style>
+:root{--ink:#0f172a;--muted:#475569;--line:#e2e8f0;--bg:#ffffff;--soft:#f8fafc;--brand:#2563eb;--brand-dark:#1d4ed8;--accent:#0ea5e9;--ok:#16a34a;--warn:#dc2626;--mono:'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;}
+*{box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);margin:0;line-height:1.65;-webkit-font-smoothing:antialiased}
+.wrap{max-width:780px;margin:0 auto;padding:32px 20px 80px}
+header.site{display:flex;justify-content:space-between;align-items:center;padding:18px 20px;border-bottom:1px solid var(--line);max-width:1100px;margin:0 auto}
+header.site a.brand{font-weight:700;color:var(--ink);text-decoration:none;font-size:18px}
+header.site nav a{color:var(--muted);text-decoration:none;margin-left:18px;font-size:14px}
+h1{font-size:36px;line-height:1.2;margin:8px 0 12px;letter-spacing:-0.01em}
+h2{font-size:24px;line-height:1.3;margin:36px 0 12px;letter-spacing:-0.005em}
+h3{font-size:18px;margin:24px 0 8px}
+p{margin:12px 0}
+a{color:var(--brand);text-decoration:none}
+a:hover{text-decoration:underline}
+.meta{color:var(--muted);font-size:14px;margin-bottom:24px}
+.meta span+span:before{content:"•";margin:0 8px;color:var(--line)}
+.lead{font-size:18px;color:#1e293b}
+.toc{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:18px 22px;margin:24px 0}
+.toc strong{display:block;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.toc ol{margin:0;padding-left:20px}
+.toc li{margin:4px 0;font-size:15px}
+.formula{font-family:var(--mono);font-size:14px;background:#0f172a;color:#e2e8f0;border-radius:8px;padding:16px 18px;overflow-x:auto;margin:14px 0;line-height:1.55;white-space:pre}
+.callout{border-left:4px solid var(--accent);background:#f0f9ff;padding:14px 18px;border-radius:6px;margin:16px 0;font-size:15px}
+.warn{border-left:4px solid var(--warn);background:#fef2f2}
+.ok{border-left:4px solid var(--ok);background:#f0fdf4}
+.cta{display:block;background:var(--brand);color:#fff;text-align:center;padding:16px 22px;border-radius:10px;font-weight:600;margin:28px 0;font-size:16px}
+.cta:hover{background:var(--brand-dark);text-decoration:none;color:#fff}
+.cta.ghost{background:#fff;color:var(--brand);border:1px solid var(--brand)}
+.cta.ghost:hover{background:var(--soft)}
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:14px}
+th,td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}
+th{background:var(--soft);font-weight:600}
+.faq{margin:14px 0;border-bottom:1px solid var(--line);padding:14px 0}
+.faq h3{margin:0 0 6px;font-size:17px}
+.related{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:18px 22px;margin:32px 0}
+.related strong{display:block;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.related ul{margin:0;padding-left:20px}
+.related li{margin:6px 0}
+footer{border-top:1px solid var(--line);padding:24px 20px;color:var(--muted);font-size:14px;text-align:center;max-width:1100px;margin:60px auto 0}
+ul.tight li{margin:6px 0}
+.kbd{font-family:var(--mono);font-size:12.5px;background:#f1f5f9;border:1px solid var(--line);border-radius:4px;padding:1px 6px}
+</style>
+</head>
+<body>
+<header class="site">
+  <a href="https://gstinvoice.app/" class="brand">gstinvoice.app</a>
+  <nav>
+    <a href="https://gstinvoice.app/">Home</a>
+    <a href="https://gstinvoice.app/blog/">Blog</a>
+    <a href="https://gstinvoice.app/pricing/">Pricing</a>
+    <a href="https://gstinvoice.app/login/">Sign in</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <h1>Input Tax Credit (ITC) Rules under GST — 2026 Guide</h1>
+  <p class="meta">
+    <span>Published 10 May 2026</span>
+    <span>~10 min read</span>
+    <span>Compliance, GST</span>
+  </p>
+
+  <p class="lead">Input tax credit is where GST stops being a cost and becomes a flow. Get the rules right and every rupee of GST you pay on business purchases comes back as a setoff. Get them wrong — even by a misplaced invoice or a late supplier — and you pay tax twice plus 24 percent interest. This 2026 guide covers the four ITC conditions, the GSTR-2B matching regime, blocked credits under section 17(5), capital-goods rules, and the seven mistakes that quietly leak ITC every quarter.</p>
+
+  <nav class="toc" aria-label="Table of contents">
+    <strong>On this page</strong>
+    <ol>
+      <li><a href="#what">What is input tax credit</a></li>
+      <li><a href="#conditions">The four conditions in section 16(2)</a></li>
+      <li><a href="#2b">GSTR-2B matching and the 2B-only rule</a></li>
+      <li><a href="#blocked">Blocked credits under section 17(5)</a></li>
+      <li><a href="#capital">ITC on capital goods</a></li>
+      <li><a href="#timelimit">Time limits and the November cutoff</a></li>
+      <li><a href="#reversal">Reversal and re-claim rules</a></li>
+      <li><a href="#mistakes">Top 7 ITC mistakes</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ol>
+  </nav>
+
+  <h2 id="what">What is input tax credit</h2>
+  <p>ITC is the mechanism that lets a registered taxpayer set off GST paid on inputs against GST charged on outputs. It is the design feature that prevents tax-on-tax cascading. The arithmetic is simple — the eligibility rules are not.</p>
+
+  <pre class="formula">Output GST liability       =  GST charged on sales
+Input tax credit          =  GST paid on eligible purchases
+Net GST to pay to govt    =  Output GST  -  Eligible ITC
+
+If Output GST > ITC  →  pay the difference in cash
+If ITC > Output GST  →  carry forward to next month (no refund except exports/inverted duty)</pre>
+
+  <p>The credit ledger is maintained on the GST portal and split into IGST, CGST, SGST and Cess balances. Crucially, IGST can be used to pay any head, but CGST and SGST cannot cross-pay each other.</p>
+
+  <h2 id="conditions">The four conditions in section 16(2)</h2>
+  <p>Section 16(2) of the CGST Act lists four cumulative conditions. Miss any one and ITC is denied — no exceptions, no equitable relief.</p>
+
+  <table>
+    <thead><tr><th>#</th><th>Condition</th><th>Practical test</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Possession of a valid tax invoice or debit note</td><td>Invoice has correct GSTIN, place of supply, HSN, and is in your name</td></tr>
+      <tr><td>2</td><td>You have actually received the goods or services</td><td>Delivery proof / acceptance of service. "Bill and hold" arrangements need careful documentation</td></tr>
+      <tr><td>3</td><td>Tax has been paid to the government by the supplier</td><td>The supplier's GSTR-3B is filed and the invoice appears in your GSTR-2B</td></tr>
+      <tr><td>4</td><td>You have filed the relevant GSTR-3B return</td><td>The ITC must be claimed in your own return; auto-population alone is not enough</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout"><strong>The supplier-default trap.</strong> Condition 3 makes you accountable for your supplier's compliance. If they collect GST from you but never deposit it, you lose the credit and the only legal remedy is to recover the amount from them as a contractual claim. The Madras High Court has held in <em>D.Y. Beathel</em> (2021) that the buyer's ITC cannot be reversed without first proceeding against the defaulting supplier — but other High Courts have ruled the opposite. Don't rely on judicial precedent; vet your suppliers up front.</div>
+
+  <a class="cta" href="https://gstinvoice.app/?utm_source=blog&utm_medium=cta&utm_campaign=itc-guide">Generate ITC-ready GST invoices free →</a>
+
+  <h2 id="2b">GSTR-2B matching and the 2B-only rule</h2>
+  <p>Since 1 January 2022, ITC can be claimed only to the extent it appears in GSTR-2B. This is the single biggest behavioural change in the GST regime — it shifts the compliance burden from buyer reconciliation to supplier diligence.</p>
+
+  <p><strong>How GSTR-2B works:</strong></p>
+  <ul class="tight">
+    <li>Generated automatically on the <strong>14th of every month</strong> for the previous tax period.</li>
+    <li>Includes invoices the supplier reported in <strong>GSTR-1</strong> and <strong>IFF</strong> filings between the 12th of the prior month and the 11th of the current month.</li>
+    <li>Provides a section-wise breakdown: ITC available, ITC not available, and ITC reversal.</li>
+    <li>Frozen once generated — no further changes for that month.</li>
+  </ul>
+
+  <pre class="formula">If invoice in GSTR-2B  →  Eligible to claim ITC (subject to other conditions)
+If invoice NOT in 2B   →  Cannot claim ITC, even with original invoice
+                          Ask supplier to file/amend; will appear in NEXT 2B</pre>
+
+  <p>The practical effect is that you should reconcile every month before filing GSTR-3B. Most accounting tools, including gstinvoice.app, pull GSTR-2B JSON and reconcile against your purchase register automatically.</p>
+
+  <h2 id="blocked">Blocked credits under section 17(5)</h2>
+  <p>Even if all four conditions are met, section 17(5) blocks ITC on specific categories. The list is exhaustive — if it's not on the list, the credit is allowed.</p>
+
+  <table>
+    <thead><tr><th>Blocked category</th><th>Exception (ITC allowed)</th></tr></thead>
+    <tbody>
+      <tr><td>Motor vehicles for transport of persons (seating ≤ 13)</td><td>Used for further supply, passenger transport service, or driving school</td></tr>
+      <tr><td>Vessels and aircraft</td><td>Same as above plus transportation of goods</td></tr>
+      <tr><td>Food, beverages, outdoor catering</td><td>Used to make outward taxable supply of same category, or supplied under statutory obligation</td></tr>
+      <tr><td>Beauty, health services, cosmetic surgery</td><td>Used to make outward supply of same category</td></tr>
+      <tr><td>Membership of clubs, health and fitness centres</td><td>No exception</td></tr>
+      <tr><td>Travel benefits to employees on leave</td><td>Only if statutorily obligated</td></tr>
+      <tr><td>Works contract for construction of immovable property</td><td>If the recipient is in the works-contract business</td></tr>
+      <tr><td>Goods or services for personal consumption</td><td>No exception</td></tr>
+      <tr><td>Goods lost, stolen, destroyed, written off, gifted</td><td>No exception</td></tr>
+      <tr><td>Tax paid under composition scheme (section 10)</td><td>No exception</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout warn"><strong>Employer-provided perks:</strong> as of the 2023 amendment, ITC is allowed on employee benefits that the employer is statutorily obligated to provide (eg. canteen for factories with 250+ workers under the Factories Act). Voluntary benefits — Diwali gifts, gym memberships, leave travel — remain blocked.</div>
+
+  <h2 id="capital">ITC on capital goods</h2>
+  <p>Capital goods (assets capitalised in books, useful life &gt; 1 year) get a friendlier treatment than under the pre-GST CENVAT regime.</p>
+
+  <ul class="tight">
+    <li><strong>100% ITC in the month of purchase</strong> — no staggering over years.</li>
+    <li><strong>Cannot also claim depreciation on the GST component</strong> under section 16(3) — you must choose. Most businesses choose ITC because the cash benefit is immediate.</li>
+    <li><strong>If sold within 5 years</strong>, you must pay either the unused proportion of ITC or the GST on the transaction value, whichever is higher.</li>
+    <li><strong>Common credit</strong>: if the capital good is used partly for exempt supplies (eg. interest income for an NBFC), proportionate ITC must be reversed annually under rule 43.</li>
+  </ul>
+
+  <pre class="formula">ITC on capital good sold within 5 years
+Reversal = max(
+    ITC claimed - (ITC × months_used / 60),
+    GST on transaction value
+)</pre>
+
+  <h2 id="timelimit">Time limits and the November cutoff</h2>
+  <p>You cannot claim ITC indefinitely. Section 16(4) caps the window for each financial year.</p>
+
+  <pre class="formula">For invoices dated in FY 2025-26:
+ITC must be claimed by the earlier of:
+  - 30 November 2026
+  - Date of filing annual return (GSTR-9) for FY 2025-26
+
+After this date: ITC is permanently lost.</pre>
+
+  <p>The 30 November cutoff was extended from "September" to "November" by Finance Act 2022 — it's still the most frequently missed deadline. Tools like our <a href="https://gstinvoice.app/blog/gstr-1-vs-gstr-3b/">GSTR-1 vs GSTR-3B guide</a> walk through which invoice gets reflected in which return so you can catch missed ITC before November.</p>
+
+  <h2 id="reversal">Reversal and re-claim rules</h2>
+  <p>Some scenarios force you to reverse ITC even after it has been claimed.</p>
+
+  <h3>Rule 37: Non-payment to supplier within 180 days</h3>
+  <p>If you don't pay your supplier within 180 days of the invoice date, you must reverse the ITC with interest at 18% from the date of original claim. You can re-claim it later in the month you actually pay.</p>
+
+  <h3>Rule 42: Common credit on inputs/services</h3>
+  <p>If you have both taxable and exempt outward supplies, reverse the proportion of common ITC attributable to exempt supplies, calculated annually.</p>
+
+  <h3>Rule 43: Common credit on capital goods</h3>
+  <p>Same principle as rule 42 but for capital goods, calculated over a 60-month useful life.</p>
+
+  <h3>Section 17(2): Banking and financial services</h3>
+  <p>Banks, NBFCs and insurance companies may opt to reverse a flat 50% of ITC instead of doing rule 42 calculations — useful when the exempt-supply ratio is too volatile to compute precisely.</p>
+
+  <h2 id="mistakes">Top 7 ITC mistakes</h2>
+  <ol>
+    <li><strong>Claiming ITC before the invoice appears in GSTR-2B.</strong> The portal accepts it and your books look clean — until your reconciliation flags a mismatch and an officer issues a notice. Always file from GSTR-2B, not from your purchase register.</li>
+    <li><strong>Missing the 30 November cutoff.</strong> A late-arrived invoice from March can still be claimed if you file October's GSTR-3B by 20 November and include it. Miss it and the ITC is gone permanently.</li>
+    <li><strong>Forgetting rule 37.</strong> A 270-day payment cycle to a vendor silently builds up reversal liability. Many businesses discover this only during a 3B-vs-books reconciliation.</li>
+    <li><strong>Claiming both ITC and depreciation on capital goods.</strong> Income tax auditors and GST auditors don't always speak to each other, so this can pass for a year — then both departments come knocking.</li>
+    <li><strong>Treating section 17(5) as a heuristic.</strong> The list is exhaustive. If your purchase is not specifically blocked, the credit is allowed — even if it "feels" personal. Conversely, you cannot reason your way around a block by arguing business benefit.</li>
+    <li><strong>Not maintaining inward supply mapping.</strong> When the officer asks "what taxable output did this hotel-stay ITC contribute to?" — you need a documented answer. Without it, the officer can apply rule 42 by force.</li>
+    <li><strong>Claiming ITC on supplier's wrong tax head.</strong> If the supplier charged CGST+SGST when it should have been IGST, both you and the supplier need to fix it before the credit is usable. See our <a href="https://gstinvoice.app/blog/cgst-sgst-igst-explained/">CGST, SGST, IGST guide</a> for the decision tree.</li>
+  </ol>
+
+  <a class="cta ghost" href="https://gstinvoice.app/gst-calculator/?utm_source=blog&utm_medium=inline&utm_campaign=itc-guide">Reconcile a sample invoice with our GST calculator →</a>
+
+  <h2 id="faq">Frequently asked questions</h2>
+
+  <div class="faq"><h3>What is input tax credit (ITC) under GST?</h3>
+  <p>ITC is the credit a registered taxpayer can claim for GST paid on inward supplies of goods or services used in the course of business, set off against output tax liability. It is the design feature that prevents tax-on-tax cascading.</p></div>
+
+  <div class="faq"><h3>What are the four conditions to claim ITC?</h3>
+  <p>Section 16(2) requires that you have a tax invoice, have received the goods or services, the tax has actually been paid to the government by the supplier (verified via GSTR-2B), and you have filed the relevant GSTR-3B. All four are cumulative.</p></div>
+
+  <div class="faq"><h3>What is the time limit to claim ITC for FY 2025-26?</h3>
+  <p>For invoices issued during FY 2025-26, you must claim ITC by 30 November 2026 or the date of filing the annual return for FY 2025-26, whichever is earlier. The November cutoff is the most commonly missed GST deadline.</p></div>
+
+  <div class="faq"><h3>What is GSTR-2B and how does it relate to ITC?</h3>
+  <p>GSTR-2B is the auto-drafted ITC statement generated for each registered person on the 14th of every month. Since 2022, ITC can be claimed only if the supplier has reported the invoice in GSTR-1 and it appears in your GSTR-2B.</p></div>
+
+  <div class="faq"><h3>What are blocked credits under section 17(5)?</h3>
+  <p>Section 17(5) blocks ITC on motor vehicles for personal use, food and beverages, club memberships, health insurance, works-contract for immovable property, goods lost or destroyed, and certain other categories. The list is exhaustive.</p></div>
+
+  <div class="faq"><h3>Can I claim ITC on capital goods?</h3>
+  <p>Yes, ITC on capital goods is fully claimable in the month of purchase, provided you do not also claim depreciation on the GST component under the Income Tax Act. You must choose one or the other.</p></div>
+
+  <div class="faq"><h3>What happens if I claim wrong or excess ITC?</h3>
+  <p>You must reverse the ITC with interest at 24 percent per annum from the date of wrong availment. Persistent wrong availment can trigger penalty under section 74 of up to 100 percent of the tax involved.</p></div>
+
+  <div class="related">
+    <strong>Related reading</strong>
+    <ul>
+      <li><a href="https://gstinvoice.app/blog/cgst-sgst-igst-explained/">CGST, SGST and IGST explained — getting the tax head right</a></li>
+      <li><a href="https://gstinvoice.app/blog/place-of-supply-gst-rules-2026/">Place of Supply Rules under GST 2026</a></li>
+      <li><a href="https://gstinvoice.app/blog/gstr-1-vs-gstr-3b/">GSTR-1 vs GSTR-3B — how invoices flow into ITC</a></li>
+    </ul>
+  </div>
+
+  <a class="cta" href="https://gstinvoice.app/?utm_source=blog&utm_medium=footer-cta&utm_campaign=itc-guide">Create ITC-correct invoices in 60 seconds →</a>
+
+  <p style="color:var(--muted);font-size:13px;margin-top:32px">This article is informational and not professional tax advice. Statutory references are based on the CGST Act 2017 and IGST Act 2017 as amended through the Finance Act 2026. Always confirm rates and rules with your CA before filing.</p>
+</main>
+
+<footer>
+  © 2026 gstinvoice.app · <a href="https://gstinvoice.app/privacy/">Privacy</a> · <a href="https://gstinvoice.app/terms/">Terms</a> · <a href="https://gstinvoice.app/blog/">Blog</a>
+</footer>
+</body>
+</html>
