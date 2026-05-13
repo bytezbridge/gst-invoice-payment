@@ -1,0 +1,14 @@
+# ByteZBridge — gstinvoice.app
+# https://gstinvoice.app
+
+User-agent: *
+Allow: /
+
+# Block private/admin/API endpoints
+Disallow: /admin-licenses.html
+Disallow: /api/
+Disallow: /v1/
+Disallow: /webhooks/
+
+# Sitemap
+Sitemap: https://gstinvoice.app/sitemap.xml
